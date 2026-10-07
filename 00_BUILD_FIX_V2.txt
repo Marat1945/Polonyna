@@ -1,0 +1,22 @@
+POLONYNA BUILD FIX V2
+
+Исправлено:
+1. Проект переведён на встроенную поддержку Kotlin в Android Gradle Plugin 9.2.
+2. Удалён конфликтующий org.jetbrains.kotlin.android plugin.
+3. Удалён android.builtInKotlin=false.
+4. Удалён старый kotlin.jvmToolchain block; Kotlin JVM target наследуется от Java targetCompatibility=17.
+5. GitHub Actions оставлен на API 36 / Build Tools 36.0.0 / Gradle 9.4.1 / Java 17.
+6. В workflow добавлен подробный --info лог для следующей диагностики.
+
+ЗАГРУЗКА В СУЩЕСТВУЮЩИЙ REPOSITORY:
+- распакуйте ZIP;
+- загрузите содержимое Polonyna_FIXED_V2 в корень GitHub repository;
+- существующие файлы замените;
+- .github/workflows/android.yml желательно заменить новым вариантом.
+Если браузер не показывает .github, workflow уже существует в вашем репозитории,
+поэтому для основного исправления критичны:
+  build.gradle.kts
+  gradle.properties
+  app/build.gradle.kts
+
+После commit GitHub Actions запустится автоматически.

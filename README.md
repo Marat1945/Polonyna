@@ -5,7 +5,7 @@ Polonyna is an experimental offline Android messenger for phones connected to th
 ## What is already in v0.1
 
 - English, Ukrainian, Russian and Polish UI.
-- Android `minSdk 23` (Android 6.0) and `targetSdk 37` (Android 17).
+- Android `minSdk 23` (Android 6.0) and `targetSdk 36` (Android 16 target; runs on newer Android versions subject to compatibility testing).
 - Discovery of nearby Polonyna devices with Android NSD/mDNS.
 - Direct text messages over TCP — no cloud server.
 - Photo transfer.
@@ -48,7 +48,7 @@ After the workflow completes, open the run and download the artifact named `polo
 
 ## Build locally
 
-Use Android Studio with Android SDK 37 installed, JDK 17 and Gradle 9.4.1. Sync the project and run the `app` configuration.
+Use Android Studio with Android SDK 36 installed, JDK 17 and Gradle 9.4.1. Sync the project and run the `app` configuration.
 
 ## Android local-network permissions
 
