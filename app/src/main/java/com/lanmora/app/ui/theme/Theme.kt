@@ -1,0 +1,26 @@
+package com.lanmora.app.ui.theme
+
+import android.os.Build
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+
+@Composable
+fun LanmoraTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val context = LocalContext.current
+    val scheme = when {
+        Build.VERSION.SDK_INT >= 31 && darkTheme -> dynamicDarkColorScheme(context)
+        Build.VERSION.SDK_INT >= 31 -> dynamicLightColorScheme(context)
+        darkTheme -> darkColorScheme()
+        else -> lightColorScheme()
+    }
+    MaterialTheme(
+        colorScheme = scheme,
+        typography = Typography(),
+        content = content
+    )
+}
