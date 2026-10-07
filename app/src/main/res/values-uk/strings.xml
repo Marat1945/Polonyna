@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lanmora</string>
+    <string name="app_name">Полонина</string>
     <string name="chats">Чати</string>
     <string name="contacts">Контакти</string>
     <string name="settings">Налаштування</string>
@@ -8,7 +8,7 @@
     <string name="all_chats">Усі чати</string>
     <string name="private_chats">Особисті</string>
     <string name="nearby_devices">Пристрої поруч</string>
-    <string name="no_devices">У цій Wi‑Fi мережі ще не знайдено пристроїв Lanmora.</string>
+    <string name="no_devices">У цій Wi‑Fi мережі ще не знайдено пристроїв Polonyna.</string>
     <string name="same_wifi_hint">Підключіть телефони до однієї Wi‑Fi мережі або точки доступу.</string>
     <string name="message_hint">Повідомлення</string>
     <string name="send">Надіслати</string>

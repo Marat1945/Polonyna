@@ -1,12 +1,12 @@
-# Lanmora
+# Polonyna / Полонина
 
-Lanmora is an experimental offline Android messenger for phones connected to the same local Wi‑Fi network or hotspot.
+Polonyna is an experimental offline Android messenger for phones connected to the same local Wi‑Fi network or hotspot.
 
 ## What is already in v0.1
 
 - English, Ukrainian, Russian and Polish UI.
 - Android `minSdk 23` (Android 6.0) and `targetSdk 37` (Android 17).
-- Discovery of nearby Lanmora devices with Android NSD/mDNS.
+- Discovery of nearby Polonyna devices with Android NSD/mDNS.
 - Direct text messages over TCP — no cloud server.
 - Photo transfer.
 - Voice notes recorded as AAC/M4A.
@@ -36,15 +36,15 @@ Create an empty GitHub repository and upload the contents of this folder, or use
 ```bash
 git init
 git add .
-git commit -m "Initial Lanmora MVP"
+git commit -m "Initial Polonyna MVP"
 git branch -M main
-git remote add origin https://github.com/YOUR_NAME/lanmora.git
+git remote add origin https://github.com/YOUR_NAME/polonyna.git
 git push -u origin main
 ```
 
 Then open **Actions → Build Android APK → Run workflow**.
 
-After the workflow completes, open the run and download the artifact named `lanmora-debug-apk`. Inside it is `app-debug.apk`.
+After the workflow completes, open the run and download the artifact named `polonyna-debug-apk`. Inside it is `app-debug.apk`.
 
 ## Build locally
 
@@ -78,4 +78,4 @@ The manifest includes:
 
 ## Product identity
 
-`Lanmora` is a provisional project name. Before public distribution, perform a proper trademark/name check and replace the package/name if needed.
+`Polonyna` is a provisional project name. Before public distribution, perform a proper trademark/name check and replace the package/name if needed.

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lanmora</string>
+    <string name="app_name">Polonyna</string>
     <string name="chats">Czaty</string>
     <string name="contacts">Kontakty</string>
     <string name="settings">Ustawienia</string>
@@ -8,7 +8,7 @@
     <string name="all_chats">Wszystkie czaty</string>
     <string name="private_chats">Prywatne</string>
     <string name="nearby_devices">Urządzenia w pobliżu</string>
-    <string name="no_devices">W tej sieci Wi‑Fi nie znaleziono jeszcze urządzeń Lanmora.</string>
+    <string name="no_devices">W tej sieci Wi‑Fi nie znaleziono jeszcze urządzeń Polonyna.</string>
     <string name="same_wifi_hint">Połącz telefony z tą samą siecią Wi‑Fi lub hotspotem.</string>
     <string name="message_hint">Wiadomość</string>
     <string name="send">Wyślij</string>

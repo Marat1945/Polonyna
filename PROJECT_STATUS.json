@@ -1,35 +1,17 @@
 {
-  "project": "Lanmora (temporary working name)",
-  "bundle": "FULL_GITHUB",
-  "version": "0.1.1",
-  "android": {
-    "minSdk": 23,
-    "compileSdk": 37,
-    "targetSdk": 37,
-    "jdk": 17,
-    "gradle": "9.4.1",
-    "agp": "9.2.0"
-  },
+  "name": "Polonyna / Полонина",
+  "version": "0.2.0",
+  "package": "com.polonyna.app",
+  "minSdk": 23,
+  "compileSdk": 36,
+  "targetSdk": 36,
   "languages": [
-    "en",
     "uk",
     "ru",
-    "pl"
+    "pl",
+    "en"
   ],
-  "github_actions": ".github/workflows/android.yml",
-  "features": [
-    "LAN NSD/mDNS peer discovery",
-    "text chat",
-    "photo transfer",
-    "audio messages",
-    "video notes",
-    "basic voice calls",
-    "SQLite message history",
-    "four UI languages"
-  ],
-  "included_docs": [
-    "docs/MASTER_PROMPT_Claude_Code_UA.docx",
-    "docs/design/"
-  ],
-  "status": "MVP - requires GitHub build and two-device testing"
+  "workflow": ".github/workflows/android.yml",
+  "repository": "https://github.com/Marat1945/Polonyna",
+  "status": "MVP; build must be validated in GitHub Actions; device functions require two-phone testing"
 }
