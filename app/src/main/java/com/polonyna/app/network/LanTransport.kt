@@ -27,6 +27,7 @@ class LanTransport(
 
     companion object {
         private const val SERVICE_TYPE = "_polonyna._tcp."
+        private const val SERVICE_PREFIX = "Polonyna-"
         private const val MAX_HEADER = 256 * 1024
         private const val MAX_PAYLOAD = 200L * 1024L * 1024L
     }
@@ -95,7 +96,9 @@ class LanTransport(
     private fun registerService() {
         val identity = identityProvider()
         val service = NsdServiceInfo().apply {
-            serviceName = "Polonyna-${identity.deviceId.take(12)}"
+            // Полный id в имени: если TXT-атрибуты не дойдут, устройство всё равно
+            // узнает само себя и не покажет себя в списке «Устройства рядом».
+            serviceName = "$SERVICE_PREFIX${identity.deviceId}"
             serviceType = SERVICE_TYPE
             port = localPort
             runCatching { setAttribute("id", identity.deviceId) }
@@ -120,7 +123,10 @@ class LanTransport(
             override fun onDiscoveryStopped(serviceType: String) = Unit
 
             override fun onServiceFound(serviceInfo: NsdServiceInfo) {
-                if (serviceInfo.serviceType == SERVICE_TYPE) {
+                // Разные версии Android отдают тип с точкой в конце или без неё.
+                val sameType = serviceInfo.serviceType?.trimEnd('.') == SERVICE_TYPE.trimEnd('.')
+                val isMe = serviceInfo.serviceName == SERVICE_PREFIX + identityProvider().deviceId
+                if (sameType && !isMe) {
                     resolveQueue.add(serviceInfo)
                     resolveNext()
                 }
@@ -161,7 +167,7 @@ class LanTransport(
                     try {
                         val myId = identityProvider().deviceId
                         val id = attribute(serviceInfo, "id")
-                            ?: serviceInfo.serviceName.removePrefix("Polonyna-")
+                            ?: serviceInfo.serviceName.removePrefix(SERVICE_PREFIX)
                         if (id != myId) {
                             val name = attribute(serviceInfo, "name") ?: id
                             val host = serviceInfo.host?.hostAddress

@@ -37,6 +37,7 @@ class VideoNoteActivity : ComponentActivity() {
     private var videoCapture: VideoCapture<Recorder>? = null
     private var recording: Recording? = null
     private var currentFile: File? = null
+    private var discardRecording = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +60,11 @@ class VideoNoteActivity : ComponentActivity() {
             ) {
                 AndroidView(
                     factory = {
-                        PreviewView(it).also(::bindCamera)
+                        PreviewView(it).apply {
+                            // COMPATIBLE = TextureView. Обычный режим (SurfaceView) игнорирует
+                            // обрезку clip(CircleShape), и «кружок» был квадратным.
+                            implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                        }.also(::bindCamera)
                     },
                     modifier = Modifier
                         .size(320.dp)
@@ -70,6 +75,8 @@ class VideoNoteActivity : ComponentActivity() {
                     onClick = {
                         val active = recording
                         if (active != null) {
+                            // Крестик во время записи = отмена, а не отправка.
+                            discardRecording = true
                             active.stop()
                         } else {
                             finish()
@@ -88,8 +95,8 @@ class VideoNoteActivity : ComponentActivity() {
                             recording?.stop()
                             isRecording = false
                         } else {
-                            startRecording()
-                            isRecording = true
+                            // Камера могла ещё не успеть запуститься — тогда запись не начинаем.
+                            isRecording = startRecording()
                         }
                     },
                     modifier = Modifier
@@ -133,8 +140,9 @@ class VideoNoteActivity : ComponentActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
-    private fun startRecording() {
-        val capture = videoCapture ?: return
+    private fun startRecording(): Boolean {
+        val capture = videoCapture ?: return false
+        discardRecording = false
         val folder = File(filesDir, "sent/video").apply { mkdirs() }
         val file = File(folder, "video-${System.currentTimeMillis()}.mp4")
         currentFile = file
@@ -153,7 +161,7 @@ class VideoNoteActivity : ComponentActivity() {
         recording = pending.start(ContextCompat.getMainExecutor(this)) { event ->
             if (event is VideoRecordEvent.Finalize) {
                 recording = null
-                if (!event.hasError() && file.exists() && file.length() > 0) {
+                if (!discardRecording && !event.hasError() && file.exists() && file.length() > 0) {
                     setResult(
                         RESULT_OK,
                         Intent().putExtra(EXTRA_PATH, file.absolutePath)
@@ -165,6 +173,7 @@ class VideoNoteActivity : ComponentActivity() {
                 finish()
             }
         }
+        return true
     }
 
     override fun onDestroy() {

@@ -4,7 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.MediaController
+import android.widget.MediaController
 import android.media.MediaPlayer
 import android.net.Uri
 import android.provider.Settings
@@ -702,14 +702,22 @@ private fun AudioMessage(path: String?) {
                     player?.pause()
                     playing = false
                 } else {
-                    val p = player ?: MediaPlayer().also {
-                        it.setDataSource(path)
-                        it.prepare()
-                        it.setOnCompletionListener { _ -> playing = false }
-                        player = it
+                    // Битый или недокачанный файл больше не «роняет» приложение.
+                    val p = player ?: MediaPlayer().let { mp ->
+                        runCatching {
+                            mp.setDataSource(path)
+                            mp.prepare()
+                            mp.setOnCompletionListener { _ -> playing = false }
+                            mp
+                        }.getOrElse {
+                            mp.release()
+                            null
+                        }
+                    }?.also { player = it }
+                    if (p != null) {
+                        p.start()
+                        playing = true
                     }
-                    p.start()
-                    playing = true
                 }
             }
         ) {
@@ -718,7 +726,7 @@ private fun AudioMessage(path: String?) {
                 null
             )
         }
-        Text("Audio")
+        Text(stringResource(R.string.voice_message))
     }
 }
 

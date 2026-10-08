@@ -29,10 +29,28 @@ class VoiceCallEngine(private val context: Context) {
 
     fun start(remoteHost: String, remotePort: Int, localPort: Int) {
         if (!running.compareAndSet(false, true)) return
+        try {
+            startInternal(remoteHost, remotePort, localPort)
+        } catch (t: Throwable) {
+            // Если микрофон, динамик или порт не запустились, освобождаем всё.
+            // Раньше флаг running оставался true, и все следующие звонки шли без звука
+            // до перезапуска приложения.
+            releaseAll()
+            running.set(false)
+            throw t
+        }
+    }
 
+    private fun startInternal(remoteHost: String, remotePort: Int, localPort: Int) {
         val minRecord = AudioRecord.getMinBufferSize(
             SAMPLE_RATE,
             AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT
+        ).coerceAtLeast(2048)
+
+        val minPlay = AudioTrack.getMinBufferSize(
+            SAMPLE_RATE,
+            AudioFormat.CHANNEL_OUT_MONO,
             AudioFormat.ENCODING_PCM_16BIT
         ).coerceAtLeast(2048)
 
@@ -47,6 +65,8 @@ class VoiceCallEngine(private val context: Context) {
             )
             .setBufferSizeInBytes(minRecord * 2)
             .build()
+        recorder = audioRecord
+        check(audioRecord.state == AudioRecord.STATE_INITIALIZED) { "Microphone is not available" }
 
         val audioTrack = AudioTrack.Builder()
             .setAudioAttributes(
@@ -62,12 +82,12 @@ class VoiceCallEngine(private val context: Context) {
                     .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
                     .build()
             )
-            .setBufferSizeInBytes(minRecord * 2)
+            .setBufferSizeInBytes(minPlay * 2)
             .setTransferMode(AudioTrack.MODE_STREAM)
             .build()
-
-        recorder = audioRecord
         player = audioTrack
+        check(audioTrack.state == AudioTrack.STATE_INITIALIZED) { "Speaker is not available" }
+
         echoCanceler = if (AcousticEchoCanceler.isAvailable()) {
             AcousticEchoCanceler.create(audioRecord.audioSessionId)?.apply { enabled = true }
         } else null
@@ -98,6 +118,8 @@ class VoiceCallEngine(private val context: Context) {
                     runCatching {
                         udp.send(DatagramPacket(buffer, read, address, remotePort))
                     }
+                } else if (read < 0) {
+                    break // микрофон остановлен или потерян — не крутим пустой цикл
                 }
             }
         }
@@ -139,6 +161,10 @@ class VoiceCallEngine(private val context: Context) {
 
     fun stop() {
         if (!running.compareAndSet(true, false)) return
+        releaseAll()
+    }
+
+    private fun releaseAll() {
         runCatching { recorder?.stop() }
         runCatching { player?.stop() }
         runCatching { recorder?.release() }
@@ -148,10 +174,14 @@ class VoiceCallEngine(private val context: Context) {
         runCatching { socket?.close() }
         recorder = null
         player = null
+        echoCanceler = null
+        noiseSuppressor = null
         socket = null
 
-        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        if (Build.VERSION.SDK_INT >= 31) audioManager.clearCommunicationDevice()
-        audioManager.mode = AudioManager.MODE_NORMAL
+        runCatching {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            if (Build.VERSION.SDK_INT >= 31) audioManager.clearCommunicationDevice()
+            audioManager.mode = AudioManager.MODE_NORMAL
+        }
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "Polonyna / Полонина",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "package": "com.polonyna.app",
   "minSdk": 23,
   "compileSdk": 36,

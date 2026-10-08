@@ -37,10 +37,17 @@ class AudioNoteRecorder(private val context: Context) {
 
     fun stop(): File? {
         val file = output
-        runCatching { recorder?.stop() }
+        // MediaRecorder.stop() бросает исключение, если запись слишком короткая
+        // (нажали и сразу отпустили). Такой файл битый: раньше он всё равно
+        // отправлялся и «ронял» приложение у получателя при воспроизведении.
+        val stoppedOk = runCatching { recorder?.stop() }.isSuccess
         runCatching { recorder?.release() }
         recorder = null
         output = null
+        if (!stoppedOk) {
+            file?.delete()
+            return null
+        }
         return file?.takeIf { it.exists() && it.length() > 0 }
     }
 
