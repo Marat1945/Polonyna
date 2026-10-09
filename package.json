@@ -1,0 +1,64 @@
+{
+  "name": "polonyna-pc",
+  "productName": "Polonyna",
+  "version": "0.4.0",
+  "description": "Полонина — офлайн-месенджер для локальної Wi-Fi мережі",
+  "author": "vanopas LTD",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "src/main/main.js",
+  "dependencies": {
+    "qrcode": "1.5.4"
+  },
+  "devDependencies": {
+    "electron": "43.7.5",
+    "electron-builder": "26.16.1"
+  },
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis portable --x64 --publish never"
+  },
+  "build": {
+    "appId": "com.polonyna.desktop",
+    "productName": "Polonyna",
+    "copyright": "© vanopas LTD - 2026",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Полонина",
+      "artifactName": "Polonyna-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Polonyna-Portable-${version}.${ext}",
+      "unpackDirName": "Polonyna"
+    }
+  }
+}

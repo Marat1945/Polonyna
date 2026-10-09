@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' file:; script-src 'self' file:; style-src 'self' 'unsafe-inline' file:; img-src 'self' file: data: blob:; media-src 'self' file: blob: data: mediastream:; font-src 'self' file: data:; connect-src 'self' file: data: blob:">
+  <title>Полонина</title>
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/features.css">
+</head>
+<body>
+  <div id="app" class="app">
+    <aside class="sidebar">
+      <header class="topbar" id="topbar"></header>
+      <div class="view" id="view"></div>
+      <nav class="bottomnav" id="nav"></nav>
+    </aside>
+    <main class="main" id="main"></main>
+  </div>
+  <audio id="remoteAudio" autoplay></audio>
+
+  <script src="js/icons.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/media.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/call.js"></script>
+</body>
+</html>

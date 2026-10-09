@@ -1,0 +1,178 @@
+/* Полонина 0.2 — нові можливості */
+
+/* ---------- поле введення: «надіслати» + кружечок голосове/відеокружечок ---------- */
+.composer .c-send { transition: opacity .15s, transform .15s; }
+.composer:not(.has-text) .c-send:not(.rec-send) { opacity: .5; box-shadow: none; }
+.c-rec {
+  position: relative; width: 56px; height: 56px; border-radius: 50%; flex: none;
+  background: var(--blue-50); color: var(--blue); display: flex; align-items: center; justify-content: center;
+  transition: transform .15s, background .15s, width .15s, margin .15s, opacity .15s;
+  touch-action: none;
+}
+.c-rec:hover { background: #DDEEFD; }
+.c-rec.pressing { transform: scale(1.12); background: var(--blue-2); color: #fff; }
+.c-rec .rb-ic { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: transform .3s, opacity .2s; }
+.c-rec.mode-voice .rb-cam, .c-rec.mode-video .rb-mic { opacity: 0; transform: rotate(-90deg) scale(.4); }
+.c-rec.flip { animation: recflip .34s ease; }
+@keyframes recflip { 0% { transform: scale(1); } 45% { transform: scale(.82) rotate(-12deg); } 100% { transform: scale(1); } }
+.composer.has-text .c-rec { width: 0; margin-left: -10px; opacity: 0; pointer-events: none; overflow: hidden; }
+
+.c-btn.timer { position: relative; }
+.c-btn.timer.on { background: #FFF1E8; color: #E8590C; }
+.c-btn.timer small { position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); background: #E8590C; color: #fff; font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 8px; white-space: nowrap; }
+.priv-banner { display: flex; align-items: center; gap: 8px; max-width: 920px; margin: 0 auto 8px; padding: 7px 12px; border-radius: 12px; background: #FFF4EC; color: #C4510F; font-size: 13px; font-weight: 500; }
+.priv-banner.in-modal { margin: 12px 0 0; }
+
+/* ---------- запис голосового: пауза, прослуховування ---------- */
+.composer.recording .rec-box { gap: 10px; }
+.composer.recording.paused .rec-box { background: var(--blue-50); }
+.rec-play { width: 38px; height: 38px; border-radius: 50%; background: var(--blue-2); color: #fff; display: flex; align-items: center; justify-content: center; flex: none; }
+.rec-level i { transition: height .06s linear; }
+.composer.recording.paused .rec-level i { background: #94BEEE; }
+.composer.recording.paused .rec-level i.on { background: var(--blue); }
+.rec-time { font-variant-numeric: tabular-nums; min-width: 64px; text-align: right; }
+.c-btn.rec-toggle { background: #F2F5FA; }
+.composer.recording .c-send { opacity: 1; }
+
+/* ---------- підтвердження перед надсиланням (як у Telegram) ---------- */
+.attach-modal { width: min(540px, 100%); }
+.ap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-height: 52vh; overflow-y: auto; }
+.ap-grid.single { grid-template-columns: 1fr; }
+.ap-item { position: relative; border-radius: 14px; overflow: hidden; background: #EEF3F9; }
+.ap-photo img, .ap-video video { width: 100%; height: 132px; object-fit: cover; display: block; }
+.ap-grid.single .ap-photo img, .ap-grid.single .ap-video video { height: auto; max-height: 46vh; object-fit: contain; background: #0E1730; }
+.ap-badge { position: absolute; left: 8px; bottom: 8px; width: 34px; height: 34px; border-radius: 50%; background: rgba(15, 27, 61, .55); color: #fff; display: flex; align-items: center; justify-content: center; }
+.ap-file { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; padding: 10px 46px 10px 12px; background: #F5F8FC; }
+.ap-file .file-ic { width: 44px; height: 44px; }
+.ap-del { position: absolute; top: 6px; right: 6px; width: 30px; height: 30px; border-radius: 50%; background: rgba(15, 27, 61, .62); color: #fff; display: flex; align-items: center; justify-content: center; }
+.ap-file .ap-del { top: 50%; transform: translateY(-50%); background: rgba(15, 27, 61, .4); }
+.ap-caption { display: flex; gap: 10px; align-items: center; margin: 14px 0 6px; }
+.ap-caption input { flex: 1; min-width: 0; height: 50px; border-radius: 25px; border: 1.5px solid var(--line-2); padding: 0 18px; font-size: 15px; outline: none; background: #fff; }
+.ap-caption input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(10, 123, 255, .12); }
+.ap-caption .c-send { width: 50px; height: 50px; opacity: 1; }
+
+/* ---------- приватні повідомлення ---------- */
+.priv-bubble { padding: 10px 14px 26px 12px; }
+.priv-card { display: flex; align-items: center; gap: 12px; text-align: left; padding: 2px; min-width: 250px; }
+.priv-ic { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #FF9A4D, #F2462E); color: #fff; display: flex; align-items: center; justify-content: center; flex: none; box-shadow: 0 4px 12px rgba(242, 70, 46, .3); }
+.priv-text { display: flex; flex-direction: column; gap: 2px; }
+.priv-text b { color: var(--navy); font-size: 15px; }
+.priv-text small { color: var(--muted); font-size: 12.5px; }
+.priv-text .priv-ttl { color: #D9480F; }
+.priv-card:hover .priv-ic { filter: brightness(1.08); }
+.priv-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: #D9480F; background: #FFF1E8; padding: 2px 9px 2px 6px; border-radius: 10px; margin-bottom: 6px; }
+.photo-bubble .priv-badge, .clip-bubble .priv-badge { margin: 4px 0 6px 6px; }
+.vn-wrap .priv-badge { align-self: flex-start; }
+.msg.vanishing { opacity: 0; transform: scale(.96); transition: opacity .7s, transform .7s; }
+
+/* ---------- файли видалено з пристрою ---------- */
+.gone-bubble .gone { display: flex; align-items: center; gap: 10px; padding: 2px 52px 14px 0; }
+.gone-ic { width: 44px; height: 44px; border-radius: 50%; background: #EEF2F8; color: var(--muted); display: flex; align-items: center; justify-content: center; flex: none; }
+.gone b { display: block; font-size: 14px; color: var(--navy); }
+.gone small { color: var(--muted); font-size: 12.5px; }
+
+/* ---------- відео й аудіо файлом ---------- */
+.clip-bubble { padding: 4px; }
+.clip { display: block; max-width: min(460px, 100%); max-height: 360px; border-radius: 14px; background: #000; }
+.clip-bubble .caption { padding: 6px 10px 2px; }
+.clip-bubble .msg-meta { position: static; justify-content: flex-end; padding: 4px 8px 2px; }
+.afile-bubble { padding-bottom: 24px; }
+.afile { display: flex; align-items: center; gap: 12px; min-width: 270px; }
+.afile-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.afile-main b { font-size: 14px; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.afile-bar { position: relative; height: 5px; border-radius: 3px; background: #C9DAF0; cursor: pointer; }
+.afile-bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--blue); border-radius: 3px; }
+.afile-time { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.msg.in .afile-bar { background: #D5DEEA; }
+
+/* ---------- запис відеокружечка: пауза й перегляд ---------- */
+.vn-circle .vn-prev { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+.vn-overlay.paused .vn-prev { display: block; }
+.vn-overlay.paused .vn-live { visibility: hidden; }
+.vn-overlay .vn-time { opacity: 1; }
+.vn-overlay.paused .rec-dot { animation: none; background: #F7B500; }
+.vn-btn[data-vn="pause"] { width: 64px; height: 64px; background: rgba(255, 255, 255, .18); }
+
+/* ---------- перевірка мережі ---------- */
+.ct-ok { display: inline-flex; vertical-align: -2px; color: var(--green-2); }
+.nd-title { margin: 16px 0 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+.nd-list { display: flex; flex-direction: column; gap: 6px; }
+.nd-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: #F5F8FC; border-radius: 14px; }
+.nd-ic { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--blue-50); color: var(--blue); flex: none; }
+.nd-ic.cable { background: #E6F6EC; color: var(--green-2); }
+.nd-ic.virtual, .nd-ic.other { background: #EEF2F8; color: var(--muted); }
+.nd-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.nd-main b { color: var(--navy); font-size: 14px; }
+.nd-main small { color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+.nd-state { display: flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.nd-state.ok { color: var(--green-2); }
+.nd-state.warn { color: #D9480F; }
+.nd-state.bad { color: var(--red); }
+.nd-empty { color: var(--muted); padding: 8px 4px; }
+
+/* ---------- очищення сховища ---------- */
+.st-list { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; }
+.st-row { display: flex; align-items: center; gap: 12px; padding: 9px 8px; border-radius: 12px; cursor: pointer; }
+.st-row:hover { background: #F5F8FC; }
+.st-row input { width: 18px; height: 18px; accent-color: var(--blue); flex: none; }
+.st-ic { width: 38px; height: 38px; border-radius: 50%; background: var(--blue-50); color: var(--blue); display: flex; align-items: center; justify-content: center; flex: none; }
+.st-name { flex: 1; display: flex; flex-direction: column; font-weight: 600; color: var(--navy); }
+.st-name small { font-weight: 400; color: var(--muted); font-size: 12.5px; }
+.st-row b { color: var(--navy); font-variant-numeric: tabular-nums; }
+.st-total { display: flex; justify-content: space-between; padding: 10px 8px 2px; border-top: 1px solid var(--line); margin-top: 6px; font-weight: 700; color: var(--navy); }
+
+/* ---------- власні мелодії ---------- */
+.sound-row { display: flex; align-items: center; gap: 8px; width: 100%; padding: 12px 0; border-top: 1px solid var(--line); }
+.sound-row .rh-text span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sound-row .icon-btn.sm { color: var(--blue); background: var(--blue-50); }
+
+/* ================= версія 0.3 ================= */
+
+/* дзвінки: голосові та відео */
+.call-overlay { flex-direction: column; }
+.call-card { position: relative; z-index: 2; }
+.call-actions { position: relative; z-index: 4; margin-top: 44px; }
+.call-stage { position: absolute; inset: 0; display: none; }
+.call-overlay.is-video .call-stage { display: block; }
+.call-stage .rv { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #05070D; display: none; }
+.call-overlay.has-rv .call-stage .rv { display: block; }
+.call-stage .lv { position: absolute; right: 24px; bottom: 132px; width: 240px; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; border: 2px solid rgba(255, 255, 255, .75); transform: scaleX(-1); background: #111827; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); display: none; z-index: 3; }
+.call-overlay.has-lv .call-stage .lv { display: block; }
+.call-overlay.cam-off .call-stage .lv { opacity: .3; }
+.call-overlay.has-rv .call-card { position: absolute; top: 22px; left: 26px; align-items: flex-start; padding: 0; gap: 2px; text-shadow: 0 1px 6px rgba(0, 0, 0, .55); }
+.call-overlay.has-rv .call-avatar { display: none; }
+.call-overlay.has-rv .call-card h2 { font-size: 22px; margin: 0; }
+.call-overlay.has-rv .call-actions { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); margin: 0; min-height: 0; }
+.call-act.cam.on .ic { background: #fff; color: #0B2A5B; }
+.chat-head .call-btn + .call-btn { margin-left: -2px; }
+
+/* налаштування: звуки */
+.snd-list { display: flex; flex-direction: column; margin-top: 10px; }
+.snd-row { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-top: 1px solid var(--line); }
+.snd-ic { width: 38px; height: 38px; border-radius: 50%; background: var(--blue-50); color: var(--blue); display: flex; align-items: center; justify-content: center; flex: none; }
+.snd-name { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.snd-name b { font-size: 14.5px; color: var(--navy); }
+.snd-name small { font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snd-row .snd-play { color: var(--blue); background: var(--blue-50); }
+
+/* налаштування: камера і мікрофон */
+.dev-grid { display: grid; gap: 10px; margin-top: 12px; }
+.dev-grid label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted); font-weight: 500; }
+.dev-grid select { height: 42px; border-radius: 12px; border: 1.5px solid var(--line-2); padding: 0 10px; background: #fff; font-size: 14px; color: var(--ink); min-width: 0; }
+.dev-found { margin-top: 8px; font-size: 12.5px; color: var(--muted); }
+.dev-test { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+.dev-test[hidden] { display: none; }
+.dev-test video { width: 160px; height: 120px; border-radius: 14px; background: #0E1730; object-fit: cover; transform: scaleX(-1); flex: none; }
+.dev-meter { flex: 1; height: 10px; border-radius: 5px; background: #E6EAF2; overflow: hidden; }
+.dev-meter i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #2DBE5A, #F7B500); transition: width .06s linear; }
+.dev-msg { margin-top: 8px; font-size: 13px; display: flex; flex-direction: column; gap: 3px; }
+.dev-msg .ok { color: var(--green-2); }
+.dev-msg .err { color: var(--red); }
+.dev-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.steps { margin: 8px 0 4px; padding-left: 20px; }
+.steps li { margin: 6px 0; line-height: 1.45; }
+.small { font-size: 12.5px; }
+
+/* 0.4: мелодії у вікні «Сповіщення» */
+.notif-sounds { margin-top: 6px; border-top: 1px solid var(--line); padding-top: 4px; }
+.notif-sounds .row-head { margin-top: 10px; }

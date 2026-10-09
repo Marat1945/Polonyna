@@ -1,71 +1,42 @@
-﻿@echo off
+@echo off
 chcp 65001 >nul
-title Polonyna - upload to GitHub
+title Polonyna PC - upload to GitHub
 cd /d "%~dp0"
-
+set REPO=https://github.com/Marat1945/Polonyna-PC.git
 echo ============================================================
-echo  POLONYNA - ЗАГРУЗКА ПОЛНОГО ПРОЕКТА В GITHUB
+echo  ПОЛОНИНА ДЛЯ ПК - ЗАГРУЗКА НА GITHUB
 echo ============================================================
 echo.
-echo Этот скрипт отправит ВСЕ файлы, включая .github/workflows,
-echo в репозиторий:
-echo https://github.com/Marat1945/Polonyna.git
+echo Репозиторий: %REPO%
+echo Сначала создайте на GitHub ПУСТОЙ репозиторий Polonyna-PC.
+echo Внимание: ветка main в нём будет заменена содержимым этой папки.
 echo.
-echo ВНИМАНИЕ: текущая ветка main в Polonyna будет заменена
-echo содержимым этой папки.
-echo.
-set /p ANSWER=Введите YES и нажмите Enter для продолжения: 
+set /p ANSWER=Введите YES и нажмите Enter: 
 if /I not "%ANSWER%"=="YES" (
   echo Отменено.
   pause
   exit /b 1
 )
-
 where git >nul 2>nul
 if errorlevel 1 (
-  echo.
-  echo ОШИБКА: Git не найден.
-  echo Установите Git for Windows: https://git-scm.com/download/win
-  echo После установки снова запустите этот файл.
+  echo Git не найден. Установите: https://git-scm.com/download/win
   pause
   exit /b 2
 )
-
 if exist ".git" rmdir /s /q ".git"
-
-git init
-if errorlevel 1 goto :error
-
+git init || goto :error
 git config user.name "Marat1945"
 git config user.email "marat1945@users.noreply.github.com"
-
-git add -A
-if errorlevel 1 goto :error
-
-git commit -m "Polonyna complete Android project"
-if errorlevel 1 goto :error
-
+git add -A || goto :error
+git commit -m "Polonyna PC 0.1.0" || goto :error
 git branch -M main
-git remote add origin https://github.com/Marat1945/Polonyna.git
-
+git remote add origin %REPO%
+git push -u origin main --force || goto :error
 echo.
-echo Сейчас GitHub может открыть окно авторизации.
-echo Войдите в свой аккаунт GitHub, если будет запрос.
-echo.
-
-git push -u origin main --force
-if errorlevel 1 goto :error
-
-echo.
-echo ============================================================
-echo ГОТОВО.
-echo Теперь откройте:
-echo https://github.com/Marat1945/Polonyna/actions
-echo ============================================================
-start "" "https://github.com/Marat1945/Polonyna/actions"
+echo ГОТОВО. Открываю GitHub Actions...
+start "" "https://github.com/Marat1945/Polonyna-PC/actions"
 pause
 exit /b 0
-
 :error
 echo.
 echo Загрузка не завершена. Скопируйте текст ошибки из этого окна.

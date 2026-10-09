@@ -1,0 +1,8 @@
+Полонина для ПК использует сторонние компоненты:
+
+- Electron (MIT License) и Chromium (лицензии Chromium поставляются вместе с программой: LICENSES.chromium.html).
+- qrcode 1.5.4 (MIT License) — генерация QR-кода подключения.
+- Шрифт Inter (SIL Open Font License 1.1), © The Inter Project Authors — src/renderer/assets/fonts/OFL-Inter.txt.
+- Значки Material Design Icons из пакета @mdi/js 7.4.47 (Pictogrammers Free License; значки — Apache License 2.0).
+
+Код приложения Talkie Pro в Полонине не используется.

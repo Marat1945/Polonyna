@@ -1,81 +1,31 @@
-# Polonyna / Полонина
+# Полонина для Windows
 
-Polonyna is an experimental offline Android messenger for phones connected to the same local Wi‑Fi network or hotspot.
+Офлайн-мессенджер для локальной Wi-Fi сети: без интернета и серверов, устройства находят друг друга сами.
 
-## What is already in v0.1
+**Возможности 0.4.0:** личные чаты, группы, общий канал «Локальний Wi-Fi» для всех в сети; текст, фото, любые файлы
+(до 2 ГБ), голосовые с волной, видеокружочки до 60 с; голосовые звонки; отметки доставки и прочтения (✓✓);
+очередь отправки — сообщение уйдёт, когда собеседник появится в сети; фото профиля; поиск; пересылка;
+работа в фоне со значком у часов; уведомления со своими мелодиями; подключение по IP; 4 языка (українська, русский, polski, English).
+Новое в 0.2.0: подтверждение перед отправкой файлов, кружок «микрофон/камера» (нажать — переключить, удерживать — записать),
+пауза и прослушивание голосовых, приватные исчезающие сообщения, проверка сети «кабель/Wi-Fi», очистка медиа, заставка.
+Новое в 0.3.0: видеозвонки, «удалить у всех», меню файла (копировать/вставить/сохранить как), звуки и мелодии в настройках,
+надёжный выбор камеры и микрофона с подсказками, если Windows их не показывает.
+Новое в 0.4.0: ✕ только сворачивает окно, автовосстановление интерфейса, прозрачная заставка (и по нажатию на логотип),
+мгновенная рассылка своего профиля и сверка профилей каждые 6 с, мелодии прямо в «Сповіщеннях».
 
-- English, Ukrainian, Russian and Polish UI.
-- Android `minSdk 23` (Android 6.0) and `targetSdk 36` (Android 16 target; runs on newer Android versions subject to compatibility testing).
-- Discovery of nearby Polonyna devices with Android NSD/mDNS.
-- Direct text messages over TCP — no cloud server.
-- Photo transfer.
-- Voice notes recorded as AAC/M4A.
-- Circular video notes recorded with CameraX.
-- Basic one-to-one voice calls over UDP PCM.
-- Local SQLite message history.
-- Familiar messenger-style navigation: Chats / Contacts / Settings / Profile.
-- GitHub Actions workflow that builds an installable debug APK.
+## Как устроено
+- `src/main/network.js` — поиск устройств (UDP 45454) и передача (TCP 45455), см. `docs/PROTOCOL.md`.
+- `src/main/store.js` — хранение: `%APPDATA%\Polonyna` (переписка), `Документы\Полонина` (медиа).
+- `src/main/main.js` — окно, трей, уведомления, очередь доставки.
+- `src/renderer/` — интерфейс по макетам (`js/app.js`, `js/chat.js`, `js/media.js`, `js/call.js`, `css/app.css`).
+- Звонки — WebRTC внутри локальной сети (подавление эха и шума), сигналы идут через TCP Полонины.
 
-## Important MVP limitations
-
-This is a clean-room new app inspired by the *functionality* of offline messengers. It does **not** contain Talkie Pro source code and it is **not yet protocol-compatible with Talkie 3.1.0**.
-
-Current v0.1 is an engineering MVP:
-
-1. Both phones must be on the same Wi‑Fi network/hotspot.
-2. The app should remain open during discovery, messaging and calls.
-3. Voice calling is raw 16 kHz PCM over UDP. It is suitable for LAN testing but still needs jitter buffering, packet loss handling and a foreground call service.
-4. Message/media transport is not end-to-end encrypted yet. Do not use this build for sensitive communication.
-5. Groups, replies, forwarding, reactions, pinning, unread counters and background notifications are next-stage features.
-6. Video notes use a circular preview and circular chat display, but the UX can still be refined.
-
-## Build on GitHub
-
-Create an empty GitHub repository and upload the contents of this folder, or use Git:
-
-```bash
-git init
-git add .
-git commit -m "Initial Polonyna MVP"
-git branch -M main
-git remote add origin https://github.com/YOUR_NAME/polonyna.git
-git push -u origin main
+## Разработка
 ```
-
-Then open **Actions → Build Android APK → Run workflow**.
-
-After the workflow completes, open the run and download the artifact named `polonyna-debug-apk`. Inside it is `app-debug.apk`.
-
-## Build locally
-
-Use Android Studio with Android SDK 36 installed, JDK 17 and Gradle 9.4.1. Sync the project and run the `app` configuration.
-
-## Android local-network permissions
-
-The manifest includes:
-
-- `NEARBY_WIFI_DEVICES` for Android 13+.
-- `ACCESS_LOCAL_NETWORK` for Android 17+.
-- `ACCESS_FINE_LOCATION` only up to Android 12 for older Wi‑Fi compatibility.
-- `RECORD_AUDIO` and `CAMERA` for voice messages, calls and video notes.
-
-## Recommended next milestones
-
-### v0.2
-- Foreground service for background reception/calls.
-- Notifications and unread counters.
-- Group chats.
-- Reply / forward / delete / copy.
-- File/document attachments.
-- Delivery/read states.
-
-### v0.3
-- End-to-end encryption with authenticated device pairing.
-- Better call codec (Opus), jitter buffer and packet-loss handling.
-- QR pairing.
-- Wi‑Fi Direct / LocalOnlyHotspot onboarding.
-- Optional compatibility layer for the original Talkie protocol after protocol analysis.
-
-## Product identity
-
-`Polonyna` is a provisional project name. Before public distribution, perform a proper trademark/name check and replace the package/name if needed.
+npm ci
+npm start                       # запуск
+npm start -- --profile=2        # вторая копия на этом же ПК (для проверки)
+npm run dist                    # сборка EXE (на Windows)
+```
+Сборка на GitHub: `.github/workflows/build-windows.yml` (установщик и portable).
+Автотест двух копий (Linux, Xvfb): `test/selftest.js`.
